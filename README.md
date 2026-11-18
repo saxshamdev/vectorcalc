@@ -48,6 +48,16 @@ sha256sum -c SHA256SUMS.txt
 Compare against `SHA256SUMS.txt` in the same release. See
 [SECURITY.md](SECURITY.md) for the Android certificate fingerprint.
 
+Android APK signing certificate (SHA-256):
+
+```
+ad55e8c971f87f417019258e9044b06778850fd019d0be6e1a23f426dd13acf4
+```
+
+Windows builds are **not code-signed** yet, so SmartScreen may show a warning on
+first launch. The SHA-256 checksum is the integrity check there — run
+`Get-FileHash` before you approve it.
+
 ---
 
 ## Privacy
