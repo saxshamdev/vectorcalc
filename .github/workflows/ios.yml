@@ -1,0 +1,53 @@
+name: iOS
+
+# iOS cannot be compiled on Windows, so this workflow is the supported way to
+# produce an iOS build. The artifact is unsigned: signing needs your own Apple
+# developer certificate, which must not be committed to the repository.
+#
+# To sign it, add these repository secrets and extend the build step:
+#   IOS_CERTIFICATE_P12        base64 of the .p12 distribution certificate
+#   IOS_CERTIFICATE_PASSWORD   password for the .p12
+#   IOS_PROVISIONING_PROFILE   base64 of the .mobileprovision
+#   IOS_TEAM_ID                Apple team identifier
+# Then run `flutter build ipa --release --export-options-plist=...`.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build unsigned iOS app
+        run: flutter build ios --release --no-codesign
+
+      - name: Package Runner.app
+        run: |
+          cd build/ios/iphoneos
+          zip -qry VECTORCALC-unsigned.zip Runner.app
+
+      - name: Upload unsigned app
+        uses: actions/upload-artifact@v4
+        with:
+          name: vectorcalc-ios-unsigned
+          path: build/ios/iphoneos/VECTORCALC-unsigned.zip
+          if-no-files-found: error
