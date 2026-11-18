@@ -2,10 +2,10 @@
   "name": "vectorcalc-desktop",
   "productName": "VECTORCALC",
   "version": "1.0.0",
-  "description": "VECTORCALC — offline engineering and scientific calculator",
+  "description": "VECTORCALC - offline engineering and scientific calculator",
   "main": "main.js",
   "author": {
-    "name": "VECTORCALC"
+    "name": "saxxshamdev"
   },
   "license": "MIT",
   "private": true,
@@ -23,7 +23,7 @@
   "build": {
     "appId": "com.vectorcalc.app",
     "productName": "VECTORCALC",
-    "copyright": "VECTORCALC",
+    "copyright": "Copyright (c) 2026 saxxshamdev",
     "directories": {
       "output": "dist",
       "buildResources": "build-resources"
