@@ -285,7 +285,7 @@ dart run flutter_launcher_icons   # Android, iOS, web
 
 ## License
 
-[MIT](LICENSE) © 2026 saxxshamdev.
+[MIT](LICENSE) © 2026 saxshamdev.
 
 Third-party assets (fonts VT323 and Press Start 2P) are licensed under the SIL
 Open Font License; see `assets/fonts/` for their license files.
