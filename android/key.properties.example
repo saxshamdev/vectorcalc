@@ -1,0 +1,10 @@
+# Copy this file to android/key.properties and fill in your own values.
+# The real file, the keystore, and all passwords are git-ignored — never commit them.
+#
+# Create a keystore with:
+#   keytool -genkeypair -v -keystore android/keystore/vectorcalc-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias vectorcalc
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=vectorcalc
+storeFile=../keystore/vectorcalc-release.jks
