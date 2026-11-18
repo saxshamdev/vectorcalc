@@ -16,7 +16,7 @@ First public release.
 - Variables `A`–`F`, `X`, `Y`, `M`; 100-entry persistent history; 25 constants
 - Modes: CMPLX, STAT (with regression), BASE-N, EQN, MATRIX, TABLE, VECTOR
 - Five themes with bright/night variants
-- Android, web, and Electron desktop (Windows) builds
+- Android and web builds, plus an iOS build via GitHub Actions
 - iOS support via GitHub Actions macOS runner
 
 ### Privacy

@@ -32,7 +32,6 @@ contractual guarantee.
 
 - The Flutter application code in `lib/`
 - The Android and iOS platform configuration
-- The Electron desktop wrapper in `desktop/`
 - The release artifacts published on GitHub
 
 Out of scope: third-party dependencies (report those upstream), issues that
@@ -48,14 +47,6 @@ require an already-compromised device, and social-engineering attacks.
 - Each release ships a `SHA256SUMS.txt` file covering every uploaded asset.
 
 ### Verify a download
-
-Windows (PowerShell):
-
-```powershell
-Get-FileHash .\VECTORCALC-1.0.0-android.apk -Algorithm SHA256
-```
-
-Linux / macOS:
 
 ```bash
 sha256sum -c SHA256SUMS.txt
@@ -80,7 +71,5 @@ A mismatch means the file did not come from this project.
   manifest does not request the `INTERNET` permission.
 - No third-party SDKs for analytics, ads, crash reporting, or attribution.
 - All user data stays in app-private local storage (see [PRIVACY.md](PRIVACY.md)).
-- The desktop wrapper serves bundled assets over a loopback-only socket and
-  blocks navigation to any other origin.
 - The expression engine is a hand-written lexer/parser/evaluator with explicit
   depth and size limits; it does not use `eval` or reflection.

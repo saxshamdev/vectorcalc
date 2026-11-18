@@ -39,12 +39,10 @@ Storage location by platform:
 | Android | App-private `SharedPreferences` (not readable by other apps) |
 | iOS | App-private `NSUserDefaults` |
 | Web | Your browser's `localStorage` for this site |
-| Windows / Linux / macOS (Electron) | Chromium `localStorage` inside the app's user-data folder |
 
 You can erase everything at any time by clearing the app's storage in your OS
 settings (Android: *Settings → Apps → VECTORCALC → Storage → Clear data*;
-browser: clear site data; desktop: delete the app's user-data folder) or by
-uninstalling the app.
+browser: clear site data) or by uninstalling the app.
 
 ---
 
@@ -52,9 +50,6 @@ uninstalling the app.
 
 - The calculation engine (`lib/core/`) is pure Dart and has no networking code.
 - The release Android manifest does **not** declare `android.permission.INTERNET`.
-- The desktop app starts a tiny static file server bound to `127.0.0.1`
-  (loopback only) so the Electron window can load its own bundled assets. It
-  cannot be reached from other machines and serves nothing but the app's files.
 - The web build is static files. If you host it yourself, your web server may
   keep ordinary access logs — that is under your control, not the app's.
 

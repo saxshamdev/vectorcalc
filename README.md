@@ -8,8 +8,8 @@
 An offline engineering and scientific calculator. Retro-clean, minimal, and
 built for people who actually work in engineering units.
 
-- **No accounts, no analytics, no internet.** The app never talks to a network; the only socket is a loopback server in the desktop shell that serves its own bundled files.
-- **One codebase** — Android, iOS, web, and desktop (Electron wrapper).
+- **No accounts, no analytics, no internet.** The app never opens a network connection.
+- **One codebase** — Android, iOS, and web.
 - **Exact results** — fractions and integers are kept exact with `BigInt`
   rationals, so `1/3 + 1/6` really is `1/2`, and `S⇔D` flips between forms.
 - **Engineering first** — SI prefixes, engineering notation, physical constants,
@@ -25,8 +25,6 @@ Get the latest build from
 | Platform | File | Size | Direct link |
 | --- | --- | --- | --- |
 | Android 7.0+ | Universal APK (arm64-v8a, armeabi-v7a, x86_64) | ~49 MB | [Download APK](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-android.apk) |
-| Windows 10/11 | Installer (NSIS) | ~89 MB | [Download installer](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-windows-setup.exe) |
-| Windows 10/11 | Portable `.exe`, no install | ~88 MB | [Download portable](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-windows-portable.exe) |
 | iOS | Build from source or CI artifact (unsigned) | — | [Building → iOS](#ios) |
 | Web | Self-host the static build | — | [Building → Web](#web) |
 
@@ -35,13 +33,7 @@ release also publishes `SHA256SUMS.txt` and the signing certificate fingerprint.
 
 ### Verify your download
 
-```powershell
-# Windows
-Get-FileHash .\VECTORCALC-1.0.0-android.apk -Algorithm SHA256
-```
-
 ```bash
-# Linux / macOS
 sha256sum -c SHA256SUMS.txt
 ```
 
@@ -53,10 +45,6 @@ Android APK signing certificate (SHA-256):
 ```
 ad55e8c971f87f417019258e9044b06778850fd019d0be6e1a23f426dd13acf4
 ```
-
-Windows builds are **not code-signed** yet, so SmartScreen may show a warning on
-first launch. The SHA-256 checksum is the integrity check there — run
-`Get-FileHash` before you approve it.
 
 ---
 
@@ -129,12 +117,12 @@ floats, nothing animates for decoration.
 ### Input
 - ES PLUS–style 8×5 keypad with `SHIFT` and `ALPHA` layers
 - Horizontally scrollable function strip for the less-used functions
-- Full physical-keyboard support on desktop and web
+- Full physical-keyboard support on web
 - Cursor movement and mid-expression editing
 
 ---
 
-## Keyboard shortcuts (desktop / web)
+## Keyboard shortcuts (web)
 
 | Key | Action |
 | --- | --- |
@@ -181,11 +169,7 @@ test/
   engine_test.dart  engine, parser, formatting
   widget_test.dart  smoke test
 tool/
-  gen_icons.dart    generates launcher icons (incl. desktop .ico)
-desktop/
-  main.js           Electron shell with a loopback-only static server
-  package.json      electron-builder config
-  scripts/sync-web.js
+  gen_icons.dart    generates launcher icons
 ```
 
 The engine has **no Flutter dependency**, which is why it can be tested directly
@@ -249,7 +233,7 @@ for `android.builtInKotlin=true`.
 
 ### iOS
 
-iOS cannot be compiled on Windows. Push to GitHub and run the **iOS** workflow
+iOS requires macOS with Xcode. Push to GitHub and run the **iOS** workflow
 (`.github/workflows/ios.yml`), which produces an unsigned `Runner.app` artifact
 on a macOS runner. Signing instructions are in the workflow header.
 
@@ -267,42 +251,15 @@ CanvasKit assets and service worker load:
 python -m http.server 8080 --directory build/web
 ```
 
-### Desktop (Windows / Linux / macOS)
-
-The desktop build wraps the web build in Electron, so there is no Visual Studio
-or Xcode requirement.
-
-```bash
-flutter build web --release
-cd desktop
-npm install
-npm run start        # run it
-npm run dist         # Windows installer + portable .exe in desktop/dist
-npm run dist:linux   # AppImage
-```
-
-`npm run sync` copies `build/web` into `desktop/web`; `main.js` serves that
-folder from `127.0.0.1` on a random port and blocks all other navigation. The
-only network interface is a loopback socket to the app's own assets — nothing
-leaves the machine.
-
 ### Platform folders
 
 Only `android/`, `ios/`, and `web/` are checked in. The native `windows/`,
-`macos/`, and `linux/` runners were removed because desktop ships through
-Electron and none of them could be built on this machine. If you ever want the
-native targets back:
-
-```bash
-flutter create --platforms=windows,macos,linux .
-```
-
-The native Windows target additionally needs the Visual Studio C++ workload.
+`macos/`, and `linux/` runners are not part of this project.
 
 Icons for all platforms come from one source:
 
 ```bash
-dart run tool/gen_icons.dart      # assets/icon + desktop/build-resources
+dart run tool/gen_icons.dart      # assets/icon
 dart run flutter_launcher_icons   # Android, iOS, web
 ```
 

@@ -36,29 +36,7 @@ void main() {
   File('assets/icon/icon_foreground.png')
       .writeAsBytesSync(img.encodePng(fg));
 
-  _writeDesktopIcons(icon, amber);
-
   stdout.writeln('wrote assets/icon/icon.png and icon_foreground.png');
-}
-
-/// Desktop (Electron) icons live next to the wrapper sources.
-void _writeDesktopIcons(img.Image master, img.Color amber) {
-  final dir = Directory('desktop/build-resources');
-  dir.createSync(recursive: true);
-
-  final png = img.copyResize(master, width: 512, height: 512);
-  File('desktop/build-resources/icon.png')
-      .writeAsBytesSync(img.encodePng(png));
-
-  final ico = img.Image(width: 256, height: 256, numChannels: 4);
-  img.fill(ico, color: img.ColorRgb8(0x12, 0x13, 0x17));
-  _drawGlyph(ico, amber, 0.16);
-  try {
-    File('desktop/build-resources/icon.ico')
-        .writeAsBytesSync(img.encodeIco(ico));
-  } catch (e) {
-    stdout.writeln('ico generation skipped: $e');
-  }
 }
 
 void _drawGlyph(img.Image im, img.Color color, double marginFrac) {

@@ -47,11 +47,6 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
-# Desktop (Electron) wrapper
-desktop/node_modules/
-desktop/web/
-desktop/dist/
-
 # Release binaries at repo root (keep these in GitHub Releases, not in git)
 /dist/
 

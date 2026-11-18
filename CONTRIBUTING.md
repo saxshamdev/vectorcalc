@@ -30,7 +30,7 @@ Flutter app, and it is meant to stay that way.
 flutter pub get
 flutter analyze
 flutter test
-flutter run -d chrome     # or: -d windows, -d android
+flutter run -d chrome     # or: -d android
 ```
 
 Before opening a pull request:

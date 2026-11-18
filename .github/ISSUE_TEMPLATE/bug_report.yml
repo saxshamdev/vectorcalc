@@ -22,8 +22,6 @@ body:
       label: Platform
       options:
         - Android
-        - Windows (installer)
-        - Windows (portable)
         - Web
         - iOS
         - Built from source
