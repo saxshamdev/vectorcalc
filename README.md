@@ -1,14 +1,64 @@
 # VECTORCALC
 
+[![Latest release](https://img.shields.io/github/v/release/saxshamdev/vectorcalc?style=flat-square&label=download)](https://github.com/saxshamdev/vectorcalc/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![No data collected](https://img.shields.io/badge/privacy-no%20data%20collected-brightgreen?style=flat-square)](PRIVACY.md)
+[![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev)
+
 An offline engineering and scientific calculator. Retro-clean, minimal, and
 built for people who actually work in engineering units.
 
-- **No accounts, no analytics, no network calls.** The app never opens a socket.
+- **No accounts, no analytics, no internet.** The app never talks to a network; the only socket is a loopback server in the desktop shell that serves its own bundled files.
 - **One codebase** — Android, iOS, web, and desktop (Electron wrapper).
 - **Exact results** — fractions and integers are kept exact with `BigInt`
   rationals, so `1/3 + 1/6` really is `1/2`, and `S⇔D` flips between forms.
 - **Engineering first** — SI prefixes, engineering notation, physical constants,
   DMS entry, angle modes, and an ES PLUS–style keypad.
+
+---
+
+## Download
+
+Get the latest build from
+**[github.com/saxshamdev/vectorcalc/releases/latest](https://github.com/saxshamdev/vectorcalc/releases/latest)**.
+
+| Platform | File | Size | Direct link |
+| --- | --- | --- | --- |
+| Android 7.0+ | Universal APK (arm64-v8a, armeabi-v7a, x86_64) | ~49 MB | [Download APK](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-android.apk) |
+| Windows 10/11 | Installer (NSIS) | ~89 MB | [Download installer](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-windows-setup.exe) |
+| Windows 10/11 | Portable `.exe`, no install | ~88 MB | [Download portable](https://github.com/saxshamdev/vectorcalc/releases/latest/download/VECTORCALC-1.0.0-windows-portable.exe) |
+| iOS | Build from source or CI artifact (unsigned) | — | [Building → iOS](#ios) |
+| Web | Self-host the static build | — | [Building → Web](#web) |
+
+The APK is signed with this project's own release key, not a debug key. Every
+release also publishes `SHA256SUMS.txt` and the signing certificate fingerprint.
+
+### Verify your download
+
+```powershell
+# Windows
+Get-FileHash .\VECTORCALC-1.0.0-android.apk -Algorithm SHA256
+```
+
+```bash
+# Linux / macOS
+sha256sum -c SHA256SUMS.txt
+```
+
+Compare against `SHA256SUMS.txt` in the same release. See
+[SECURITY.md](SECURITY.md) for the Android certificate fingerprint.
+
+---
+
+## Privacy
+
+**VECTORCALC collects nothing.** No accounts, no analytics, no ads, no
+telemetry, no crash reporting, no network calls. The release Android manifest
+does not even request the `INTERNET` permission. History, variables, and
+settings are stored only in app-private local storage and disappear when you
+clear the app's data or uninstall it.
+
+Read the full [privacy policy](PRIVACY.md) and [security policy](SECURITY.md).
 
 ---
 
@@ -54,6 +104,17 @@ floats, nothing animates for decoration.
 - `M+`, `M−`, `MC`, `RCL`
 - 100-entry persistent history, tap to recall
 - 25 physical and mathematical constants with a searchable catalogue
+
+### Modes
+
+- **COMP** — general expression evaluation
+- **CMPLX** — complex arithmetic in rectangular and polar form
+- **STAT** — one-variable descriptive statistics and two-variable regression
+- **BASE-N** — binary/octal/decimal/hex conversion and bitwise operations
+- **EQN** — 2×2 and 3×3 linear systems, quadratics, and cubics (real or complex roots)
+- **MATRIX** — 2×2 and 3×3 add, subtract, multiply, transpose, determinant, inverse
+- **TABLE** — evaluate `f(x)` over a start/end/step range
+- **VECTOR** — 2D/3D add, subtract, dot, cross, magnitude, and angle
 
 ### Input
 - ES PLUS–style 8×5 keypad with `SHIFT` and `ALPHA` layers
@@ -124,7 +185,7 @@ and reused later (CLI, server, another UI).
 
 ## Building
 
-Prerequisites: Flutter 3.24+ (Dart 3.5+), Android SDK for Android builds,
+Prerequisites: Flutter 3.47+ (Dart 3.13+), Android SDK for Android builds,
 Xcode on macOS for iOS.
 
 ```bash
@@ -140,9 +201,15 @@ flutter build apk --release
 # build/app/outputs/flutter-apk/app-release.apk
 ```
 
-Application id `com.vectorcalc.app`. Release builds are currently signed with
-the debug keystore so they install directly; replace the signing config in
-`android/app/build.gradle.kts` before publishing to a store.
+Application id `com.vectorcalc.app`. When `android/key.properties` exists
+(see `android/key.properties.example`), release builds are signed with the
+project's own release key; the keystore and passwords are git-ignored and must
+never be committed. Without that file Flutter falls back to the debug keystore,
+which is fine for local testing but not for distribution.
+
+CI builds in `.github/workflows/android.yml` are **debug-signed** because no
+signing secrets are exposed to pull requests; treat those artifacts as test
+builds, not releases.
 
 The APK is a universal build (arm64-v8a, armeabi-v7a, x86_64), about 48 MB.
 For a smaller download use `flutter build apk --split-per-abi` and ship the
@@ -233,13 +300,17 @@ dart run flutter_launcher_icons   # Android, iOS, web
 
 ## Notes and limits
 
-- Complex numbers, equation solving, matrices, and calculus (`∫`, `d/dx`, `Σ`)
-  are **not** in this version. They are the next milestone, not a hidden flag.
+- Calculus (`∫`, `d/dx`, `Σ`) is not in this version. It is the next milestone,
+  not a hidden flag.
+- MATRIX and EQN work up to 3×3 / cubic; larger systems are out of scope for the
+  keypad form factor.
+- STAT input is a typed list of numbers rather than a dedicated spreadsheet
+  editor.
 - `1/0` is reported as `Math ERROR`, matching Casio behaviour.
 - Trig results are snapped to exact integers when they land within `1e-14`, so
   `sin(30)` displays `0.5` rather than `0.49999999999999994`.
 - History and variables persist through `shared_preferences`; everything else is
-  in-memory state.
+  in-memory state. Nothing is ever sent anywhere — see [PRIVACY.md](PRIVACY.md).
 - There is exactly one plugin dependency (`shared_preferences`). Everything
   else is pure Dart.
 
@@ -247,4 +318,7 @@ dart run flutter_launcher_icons   # Android, iOS, web
 
 ## License
 
-MIT.
+[MIT](LICENSE) © 2026 saxxshamdev.
+
+Third-party assets (fonts VT323 and Press Start 2P) are licensed under the SIL
+Open Font License; see `assets/fonts/` for their license files.

@@ -1,0 +1,68 @@
+name: Bug report
+description: Report a reproducible problem with VECTORCALC
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please do **not** use this
+        form for security issues — see [SECURITY.md](../blob/main/SECURITY.md).
+  - type: input
+    id: version
+    attributes:
+      label: VECTORCALC version
+      description: Shown in the release you downloaded (for example 1.0.0)
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - Windows (installer)
+        - Windows (portable)
+        - Web
+        - iOS
+        - Built from source
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Enter ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Screenshots are welcome. Do not include private data.
+    validations:
+      required: true
+  - type: input
+    id: expression
+    attributes:
+      label: Expression (if relevant)
+      placeholder: 2(3+4)^2
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I am using the latest release.
+          required: true
+        - label: This report contains no personal or sensitive data.
+          required: true
